@@ -215,12 +215,7 @@ const PhysicsBackground: React.FC<PhysicsBackgroundProps> = ({ totalBalls, trigg
 
         ctx.beginPath();
         ctx.arc(0, 0, drawRadius, 0, 2 * Math.PI);
-        // Gradient for dimension on the base color
-        const bgGrad = ctx.createLinearGradient(0, drawRadius, 0, -drawRadius);
-        bgGrad.addColorStop(0, '#262626'); // Not too black, just a deep shadow
-        bgGrad.addColorStop(0.5, colorInfo.hex); // Fade until center
-        bgGrad.addColorStop(1, colorInfo.hex);
-        ctx.fillStyle = bgGrad;
+        ctx.fillStyle = colorInfo.hex;
         ctx.fill();
 
         ctx.shadowBlur = 0;
@@ -261,7 +256,6 @@ const PhysicsBackground: React.FC<PhysicsBackgroundProps> = ({ totalBalls, trigg
         ctx.arc(0, 0, drawRadius, 0, 2 * Math.PI);
         ctx.fill();
 
-        // Specular Highlight
         ctx.beginPath();
         ctx.ellipse(0, -drawRadius * 0.55, drawRadius * 0.45, drawRadius * 0.18, 0, 0, 2 * Math.PI);
         ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';

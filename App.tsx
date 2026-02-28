@@ -297,7 +297,7 @@ const Game: React.FC<{ roomName: string | null, onOpenTools: () => void }> = ({ 
 
     setTimeout(() => {
       setIsAnimating(false);
-    }, 1600);
+    }, 2600);
   }, [drawnNumbers, queue, totalBalls, roomName, isOnline]); 
 
   const handleReset = async () => {
