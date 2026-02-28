@@ -41,9 +41,6 @@ const BallDispenser: React.FC<BallDispenserProps> = ({
                 `}
                 style={{ backgroundColor: ballColor?.hex }}
             >
-                {/* Inner Shadow Layer for depth on the colored area */}
-                <div className="absolute inset-0 rounded-full shadow-[inset_0_-35px_60px_rgba(0,0,0,0.85),inset_0_20px_40px_rgba(255,255,255,0.2)] pointer-events-none"></div>
-
                 {/* Black Patch (Center) - Reduced size to show more color */}
                 <div className={`
                     absolute w-[68%] h-[68%] bg-black rounded-full 
@@ -65,9 +62,6 @@ const BallDispenser: React.FC<BallDispenserProps> = ({
         ) : (
             /* Placeholder Ball (Black) with Highlight */
             <div className="relative z-10 w-[95%] h-[95%] rounded-full bg-black bingo-ball-shadow border border-white/5 overflow-hidden">
-                {/* Inner Shadow Layer for depth */}
-                <div className="absolute inset-0 rounded-full shadow-[inset_0_-45px_70px_rgba(0,0,0,0.95),inset_0_20px_40px_rgba(255,255,255,0.1)] pointer-events-none"></div>
-                
                 <div className="absolute top-[5%] left-1/2 -translate-x-1/2 w-[60%] h-[30%] bg-gradient-to-b from-white/40 to-transparent rounded-[50%] blur-[2px] z-20 pointer-events-none"></div>
             </div>
         )}
