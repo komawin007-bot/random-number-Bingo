@@ -1,0 +1,5 @@
+{
+  "name": "กำลังแก้จ้า",
+  "description": "A realistic Bingo caller app with physics-based background balls, sound effects, and a remote admin panel for locking numbers.",
+  "requestFramePermissions": []
+}
