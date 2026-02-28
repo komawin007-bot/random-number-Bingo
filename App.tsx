@@ -131,15 +131,13 @@ const ToolsModal: React.FC<{
     const newTaps = taps + 1;
     if (tapTimeoutRef.current) clearTimeout(tapTimeoutRef.current);
     
-    if (newTaps === 11) {
-      setShowAdmin(true);
+    setTaps(newTaps);
+    tapTimeoutRef.current = setTimeout(() => {
+      if (newTaps === 11) {
+        setShowAdmin(true);
+      }
       setTaps(0);
-    } else {
-      setTaps(newTaps);
-      tapTimeoutRef.current = setTimeout(() => {
-        setTaps(0);
-      }, 400);
-    }
+    }, 400);
   };
 
   return (
@@ -326,15 +324,13 @@ const Game: React.FC<{ roomName: string | null, onOpenTools: () => void }> = ({ 
     const next = secretTaps + 1;
     if (tapTimerRef.current) clearTimeout(tapTimerRef.current);
     
-    if (next >= 5) {
-      onOpenTools();
+    setSecretTaps(next);
+    tapTimerRef.current = setTimeout(() => {
+      if (next === 5) {
+        onOpenTools();
+      }
       setSecretTaps(0);
-    } else {
-      setSecretTaps(next);
-      tapTimerRef.current = setTimeout(() => {
-        setSecretTaps(0);
-      }, 1000);
-    }
+    }, 1000);
   };
 
   return (

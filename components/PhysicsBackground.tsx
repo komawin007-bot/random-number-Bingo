@@ -256,12 +256,7 @@ const PhysicsBackground: React.FC<PhysicsBackgroundProps> = ({ totalBalls, trigg
         ctx.arc(0, 0, drawRadius, 0, 2 * Math.PI);
         ctx.fill();
 
-        // Bottom Shadow (Opposite to Specular Highlight)
-        ctx.beginPath();
-        ctx.ellipse(0, drawRadius * 0.6, drawRadius * 0.5, drawRadius * 0.25, 0, 0, 2 * Math.PI);
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
-        ctx.fill();
-
+        // Specular Highlight
         ctx.beginPath();
         ctx.ellipse(0, -drawRadius * 0.55, drawRadius * 0.45, drawRadius * 0.18, 0, 0, 2 * Math.PI);
         ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
