@@ -22,7 +22,7 @@ const BallDispenser: React.FC<BallDispenserProps> = ({
   return (
     <div className="relative flex items-center justify-center">
       {/* The Dispenser Hole */}
-      <div className="relative w-[35vw] h-[35vw] max-w-[184px] max-h-[184px] min-w-[140px] min-h-[140px] flex items-center justify-center">
+      <div className="relative w-[42vw] h-[42vw] max-w-[220px] max-h-[220px] min-w-[168px] min-h-[168px] flex items-center justify-center">
         {/* The Black Background / Hole Depth */}
         <div className="absolute inset-0 bg-black rounded-full shadow-2xl border-4 border-gray-800 z-0"></div>
         {/* Inner Shadow for depth */}
@@ -47,7 +47,7 @@ const BallDispenser: React.FC<BallDispenserProps> = ({
                     flex items-center justify-center shadow-inner
                     ${isAnimating ? 'animate-face-roll' : ''}
                 `}>
-                    <span className="text-6xl sm:text-[80px] font-black text-white tracking-tighter leading-none">
+                    <span className="text-[72px] sm:text-[96px] font-black text-white tracking-tighter leading-none">
                         {displayBall}
                     </span>
                     {/* Underline (White on Black) - moves with the patch */}
