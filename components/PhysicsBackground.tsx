@@ -215,7 +215,12 @@ const PhysicsBackground: React.FC<PhysicsBackgroundProps> = ({ totalBalls, trigg
 
         ctx.beginPath();
         ctx.arc(0, 0, drawRadius, 0, 2 * Math.PI);
-        ctx.fillStyle = colorInfo.hex;
+        // Gradient for dimension on the base color
+        const bgGrad = ctx.createLinearGradient(0, drawRadius, 0, -drawRadius);
+        bgGrad.addColorStop(0, '#262626'); // Not too black, just a deep shadow
+        bgGrad.addColorStop(0.5, colorInfo.hex); // Fade until center
+        bgGrad.addColorStop(1, colorInfo.hex);
+        ctx.fillStyle = bgGrad;
         ctx.fill();
 
         ctx.shadowBlur = 0;
