@@ -405,7 +405,7 @@ const Game: React.FC<{ roomName: string | null, onOpenTools: () => void }> = ({ 
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div className="relative w-full h-full pointer-events-auto">
                 <div className="absolute top-[62%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 scale-[0.8] sm:scale-100"> <BallDispenser currentBall={currentBall} isAnimating={isAnimating} /> </div>
-                <div className="absolute top-[62%] left-1/2 translate-x-[110px] sm:translate-x-[185px] translate-y-0 z-30 scale-[0.8] sm:scale-100"> <Controls onDraw={drawBall} isAnimating={isAnimating} /> </div>
+                <div className="absolute top-[62%] right-[22vw] sm:right-[102px] translate-y-0 z-30 scale-[0.8] sm:scale-100 origin-right"> <Controls onDraw={drawBall} isAnimating={isAnimating} /> </div>
             </div>
         </div>
       </div>
