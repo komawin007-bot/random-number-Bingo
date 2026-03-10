@@ -20,6 +20,7 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ initialRoomName, onBack }) => {
   // RIGWINNER States
   const [isRigOpen, setIsRigOpen] = useState(false);
   const [rigInput, setRigInput] = useState('');
+  const [rigMode, setRigMode] = useState<'standard' | 'special12'>('standard');
 
   useEffect(() => {
     if (!roomName) return;
@@ -109,6 +110,62 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ initialRoomName, onBack }) => {
     const finalQueue = [...queueBeforeEnd, winningBall];
 
     await syncService.updateQueue(finalQueue);
+    setIsRigOpen(false);
+  };
+
+  const handleRigForWinner12 = async (winnerIdx: number) => {
+    // ชุดตัวเลขผู้ชนะคนที่ n คือ n, n+12, n+24, n+36
+    const winSet = [winnerIdx, winnerIdx + 12, winnerIdx + 24, winnerIdx + 36];
+    
+    // สุ่มความยาวคิว 20 - 35 (เนื่องจากมีแค่ 49 ลูก)
+    const seqLength = Math.floor(Math.random() * (35 - 20 + 1)) + 20;
+    
+    // เตรียมเลขทั้งหมด (1-49)
+    const allBalls = Array.from({ length: 49 }, (_, i) => i + 1);
+    
+    // แยกเลขผู้ชนะออกจากเลขอื่น
+    const otherBalls = allBalls.filter(b => !winSet.includes(b));
+    let shuffledOthers = shuffle(otherBalls);
+    
+    // สร้างคิวตัวเติม (Filler) 
+    const fillers: number[] = [];
+    const setCounts: Record<number, number> = {};
+    
+    for (const b of shuffledOthers) {
+        if (fillers.length >= seqLength - 4) break;
+        
+        // ตรวจสอบว่าเลขนี้จะทำให้ใครคนอื่นชนะไหม (1-12)
+        // เลข 49 ไม่นับ
+        if (b <= 48) {
+            const setIdx = b > 36 ? b - 36 : b > 24 ? b - 24 : b > 12 ? b - 12 : b;
+            const currentCount = setCounts[setIdx] || 0;
+            
+            if (currentCount < 3) { // ให้คนอื่นออกได้ไม่เกิน 3 ตัวในเซ็ตของเขา
+                fillers.push(b);
+                setCounts[setIdx] = currentCount + 1;
+            }
+        } else {
+            // เลข 49 ใส่ได้เลย
+            fillers.push(b);
+        }
+    }
+
+    // สุ่มเลือกเลข 1 ตัวจากชุดชนะเพื่อไปเป็นตัวปิดเกม (Winning Ball)
+    const winBallsShuffled = shuffle(winSet);
+    const winningBall = winBallsShuffled[0];
+    const internalWinners = [winBallsShuffled[1], winBallsShuffled[2], winBallsShuffled[3]];
+    
+    // ผสมเลขภายในคิว (ยกเว้นตัวสุดท้าย)
+    const queueBeforeEnd = shuffle([...fillers, ...internalWinners]);
+    const finalQueue = [...queueBeforeEnd, winningBall];
+
+    // ปรับ totalBalls เป็น 49 และอัปเดตคิว
+    await syncService.publishState({
+        ...syncService.getCurrentState(),
+        queue: finalQueue,
+        total: 49
+    });
+    
     setIsRigOpen(false);
   };
 
@@ -242,34 +299,75 @@ const AdminPanel: React.FC<AdminPanelProps> = ({ initialRoomName, onBack }) => {
               <div className="w-14 h-14 bg-yellow-400 rounded-2xl flex items-center justify-center shadow-lg shadow-yellow-100">
                 <Trophy size={28} className="text-slate-900" />
               </div>
-              <div>
+              <div className="flex-1">
                 <h3 className="text-2xl font-black text-slate-900 leading-tight tracking-tight uppercase">Master Rigging</h3>
-                <p className="text-slate-400 font-bold text-sm tracking-wide">SELECT WINNER OR CUSTOM SEQUENCE</p>
+                <div className="flex gap-2 mt-1">
+                  <button 
+                    onClick={() => setRigMode('standard')}
+                    className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${rigMode === 'standard' ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-400'}`}
+                  >
+                    Standard (75)
+                  </button>
+                  <button 
+                    onClick={() => setRigMode('special12')}
+                    className={`px-3 py-1 rounded-full text-[10px] font-black uppercase tracking-widest transition-all ${rigMode === 'special12' ? 'bg-purple-600 text-white' : 'bg-slate-100 text-slate-400'}`}
+                  >
+                    Special (49)
+                  </button>
+                </div>
               </div>
             </div>
 
             <div className="flex-1 overflow-y-auto pr-2 space-y-8">
               {/* Quick Rig Grid */}
               <section>
-                <div className="flex items-center gap-2 mb-4">
-                    <UserCheck size={18} className="text-blue-500" />
-                    <h4 className="font-black text-slate-900 uppercase text-sm tracking-widest">Select Winner (1-25)</h4>
-                </div>
-                <div className="grid grid-cols-5 gap-2">
-                  {Array.from({ length: 25 }, (_, i) => i + 1).map((n) => (
-                    <button
-                      key={n}
-                      onClick={() => handleRigForWinner(n)}
-                      className="aspect-square bg-slate-50 border-2 border-slate-100 rounded-2xl flex flex-col items-center justify-center group hover:bg-blue-600 hover:border-blue-500 transition-all active:scale-90"
-                    >
-                      <span className="text-[10px] font-black text-slate-300 group-hover:text-blue-200 uppercase">Winner</span>
-                      <span className="text-xl font-black text-slate-900 group-hover:text-white leading-none">{n}</span>
-                    </button>
-                  ))}
-                </div>
-                <p className="mt-3 text-[10px] text-slate-400 font-bold bg-slate-50 p-2 rounded-lg border border-slate-100 italic">
-                  * System will auto-generate 20-40 balls sequence ending with winner set numbers.
-                </p>
+                {rigMode === 'standard' ? (
+                  <>
+                    <div className="flex items-center gap-2 mb-4">
+                        <UserCheck size={18} className="text-blue-500" />
+                        <h4 className="font-black text-slate-900 uppercase text-sm tracking-widest">Select Winner (1-25)</h4>
+                    </div>
+                    <div className="grid grid-cols-5 gap-2">
+                      {Array.from({ length: 25 }, (_, i) => i + 1).map((n) => (
+                        <button
+                          key={n}
+                          onClick={() => handleRigForWinner(n)}
+                          className="aspect-square bg-slate-50 border-2 border-slate-100 rounded-2xl flex flex-col items-center justify-center group hover:bg-blue-600 hover:border-blue-500 transition-all active:scale-90"
+                        >
+                          <span className="text-[10px] font-black text-slate-300 group-hover:text-blue-200 uppercase">Winner</span>
+                          <span className="text-xl font-black text-slate-900 group-hover:text-white leading-none">{n}</span>
+                        </button>
+                      ))}
+                    </div>
+                    <p className="mt-3 text-[10px] text-slate-400 font-bold bg-slate-50 p-2 rounded-lg border border-slate-100 italic">
+                      * System will auto-generate 20-40 balls sequence ending with winner set numbers (n, n+25, n+50).
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <div className="flex items-center gap-2 mb-4">
+                        <UserCheck size={18} className="text-purple-500" />
+                        <h4 className="font-black text-slate-900 uppercase text-sm tracking-widest">Select Winner (1-12) - 49 Balls</h4>
+                    </div>
+                    <div className="grid grid-cols-3 gap-3">
+                      {Array.from({ length: 12 }, (_, i) => i + 1).map((n) => (
+                        <button
+                          key={n}
+                          onClick={() => handleRigForWinner12(n)}
+                          className="p-4 bg-slate-50 border-2 border-slate-100 rounded-2xl flex flex-col items-center justify-center group hover:bg-purple-600 hover:border-purple-500 transition-all active:scale-90"
+                        >
+                          <span className="text-[10px] font-black text-slate-300 group-hover:text-purple-200 uppercase">Person {n}</span>
+                          <span className="text-xs font-black text-slate-900 group-hover:text-white mt-1">
+                            {n}, {n+12}, {n+24}, {n+36}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                    <p className="mt-3 text-[10px] text-slate-400 font-bold bg-slate-50 p-2 rounded-lg border border-slate-100 italic">
+                      * System will auto-generate 20-35 balls sequence. No one else will bingo before the winner.
+                    </p>
+                  </>
+                )}
               </section>
 
               {/* Manual Rig */}

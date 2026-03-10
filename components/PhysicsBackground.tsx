@@ -222,6 +222,13 @@ const PhysicsBackground: React.FC<PhysicsBackgroundProps> = ({ totalBalls, trigg
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 0;
 
+        // เพิ่มมิติด้วยการไล่เฉดสีดำจากขอบเข้าหาตรงกลาง (Vignette)
+        const dimensionGrad = ctx.createRadialGradient(0, 0, drawRadius * 0.4, 0, 0, drawRadius);
+        dimensionGrad.addColorStop(0, 'rgba(0,0,0,0)');
+        dimensionGrad.addColorStop(1, 'rgba(0,0,0,0.3)');
+        ctx.fillStyle = dimensionGrad;
+        ctx.fill();
+
         ctx.rotate(ball.angle);
         const innerRadius = drawRadius * 0.62;
         ctx.beginPath();

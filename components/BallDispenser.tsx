@@ -39,7 +39,10 @@ const BallDispenser: React.FC<BallDispenserProps> = ({
                     overflow-hidden /* Mask the black patch sliding in */
                     ${isAnimating ? 'animate-ball-enter' : 'scale-100'}
                 `}
-                style={{ backgroundColor: ballColor?.hex }}
+                style={{ 
+                    backgroundColor: ballColor?.hex,
+                    backgroundImage: 'radial-gradient(circle, transparent 0%, rgba(0,0,0,0.22) 100%)'
+                }}
             >
                 {/* Black Patch (Center) - Reduced size to show more color */}
                 <div className={`
