@@ -7,7 +7,7 @@ import BallDispenser from './components/BallDispenser';
 import AdminPanel from './components/AdminPanel';
 import { syncService, BingoRoomState } from './services/syncService';
 import { audioService } from './services/audioService';
-import { X, RotateCcw, Cloud, Wifi, Globe, ShieldCheck, ArrowRight, Settings2, Play, Sparkles, Settings, History } from 'lucide-react';
+import { X, RotateCcw, Cloud, Wifi, Globe, ShieldCheck, ArrowRight, Settings2, Play, Sparkles, Settings, History, ArrowLeft } from 'lucide-react';
 import { getBallColor } from './types';
 
 const LandingPage: React.FC<{ onEnter: () => void }> = ({ onEnter }) => {
@@ -203,7 +203,21 @@ const Game: React.FC<{ roomName: string | null, onOpenTools: () => void }> = ({ 
   const [isAnimating, setIsAnimating] = useState(false);
   const [drawTrigger, setDrawTrigger] = useState(0);
   const [isOnline, setIsOnline] = useState(false);
+  const [isBoardVisible, setIsBoardVisible] = useState(true);
+  const [boardStatus, setBoardStatus] = useState<'open' | 'closed' | 'opening' | 'closing'>('open');
   const [resetKey, setResetKey] = useState(0);
+
+  const handleToggle = () => {
+    if (boardStatus === 'opening' || boardStatus === 'closing') return;
+    
+    const nextVisible = !isBoardVisible;
+    setBoardStatus(nextVisible ? 'opening' : 'closing');
+    setIsBoardVisible(nextVisible);
+    
+    setTimeout(() => {
+      setBoardStatus(nextVisible ? 'open' : 'closed');
+    }, 1000);
+  };
 
   // สำหรับการแอบซ่อนปุ่ม Cloud Hub
   const [secretTaps, setSecretTaps] = useState(0);
@@ -377,15 +391,26 @@ const Game: React.FC<{ roomName: string | null, onOpenTools: () => void }> = ({ 
             </button>
         </div>
         
-        <div className="absolute top-[2vh] left-[2vw] z-40 scale-[0.7] sm:scale-90 md:scale-100 origin-top-left"> 
-          <BingoBoard totalBalls={sliderValue} drawnNumbers={drawnNumbers} currentBall={currentBall} /> 
+        <div className={`absolute top-[2vh] z-40 transition-all duration-1000 ${isBoardVisible ? 'left-[2vw]' : '-left-[400px]'}`}>
+          <div className="flex items-start scale-[0.7] sm:scale-90 md:scale-100 origin-top-left">
+            <BingoBoard totalBalls={sliderValue} drawnNumbers={drawnNumbers} currentBall={currentBall} />
+            <button
+              onClick={handleToggle}
+              className="bg-black text-white w-8 h-28 rounded-r-lg flex flex-col items-center justify-between py-3 font-black text-sm mt-4"
+            >
+              <Play size={16} fill="white" className={`transition-transform duration-1000 ease-in-out ${isBoardVisible ? 'rotate-180' : ''}`} />
+              <span className="rotate-180" style={{writingMode: 'vertical-rl'}}>
+                {boardStatus === 'opening' ? 'Opening' : boardStatus === 'closing' ? 'Closing' : isBoardVisible ? 'Hide' : 'Show'}
+              </span>
+            </button>
+          </div>
         </div>
         
         <div className="absolute top-[62%] left-[4vw] translate-y-[-10px] z-40 w-[220px] sm:w-60 flex flex-col items-center scale-[0.8] sm:scale-100 origin-left">
             <div className="relative w-full h-12 flex items-center justify-center">
                 <div className="absolute w-full h-3 bg-[#235BA0] rounded-full shadow-[inset_0_3px_4px_rgba(0,0,0,0.5)] border border-black/20"></div>
                 <input type="range" min="49" max="99" value={sliderValue} onChange={(e) => setSliderValue(parseInt(e.target.value))} onMouseUp={handleSliderCommit} onTouchEnd={handleSliderCommit} className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-20" />
-                <div className="absolute h-10 w-10 bg-white rounded-full flex items-center justify-center pointer-events-none z-10 shadow-[0_5px_15px_rgba(0,0,0,0.7)]" style={{ left: `${((sliderValue - 49) / 50) * 100}%`, transform: `translateX(-50%)` }}> 
+                <div className="absolute h-11 w-11 bg-white rounded-full flex items-center justify-center pointer-events-none z-10 shadow-[0_5px_15px_rgba(0,0,0,0.7)]" style={{ left: `${((sliderValue - 49) / 50) * 100}%`, transform: `translateX(-50%)` }}> 
                     <span className="text-black font-bold text-lg leading-none">{sliderValue}</span> 
                 </div>
             </div>
@@ -401,7 +426,7 @@ const Game: React.FC<{ roomName: string | null, onOpenTools: () => void }> = ({ 
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div className="relative w-full h-full pointer-events-auto">
                 <div className="absolute top-[62%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-30 scale-[0.8] sm:scale-100"> <BallDispenser currentBall={currentBall} isAnimating={isAnimating} /> </div>
-                <div className="absolute top-[62%] right-[22vw] sm:right-[102px] translate-y-0 z-30 scale-[0.8] sm:scale-100 origin-right"> <Controls onDraw={drawBall} isAnimating={isAnimating} /> </div>
+                <div className="absolute top-[62%] right-[22vw] sm:right-[102px] translate-y-0 z-30 scale-[0.8] sm:scale-100 origin-right"> <Controls onDraw={drawBall} onReset={handleReset} isAnimating={isAnimating} /> </div>
             </div>
         </div>
       </div>

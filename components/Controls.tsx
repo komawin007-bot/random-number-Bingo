@@ -3,24 +3,32 @@ import React from 'react';
 
 interface ControlsProps {
   onDraw: () => void;
+  onReset: () => void;
   isAnimating: boolean;
 }
 
 const Controls: React.FC<ControlsProps> = ({ 
   onDraw, 
+  onReset,
   isAnimating,
 }) => {
   
   const handlePress = () => {
-    // แก้ไข: สามารถกดได้ตลอดเวลาโดยไม่ต้องเช็ค isAnimating
     onDraw();
   };
 
   return (
     <div className="flex items-center gap-3 sm:gap-4">
-          {/* Label Text */}
-          <div className="text-white text-center font-roboto text-[11px] sm:text-[14px] leading-tight drop-shadow-md select-none whitespace-nowrap">
-            Press button to<br/>draw ball
+          <div className="flex flex-col items-center gap-2">
+            <button
+              onClick={onReset}
+              className="px-5 py-1.5 bg-[#32CD32] text-white border-2 border-white rounded-lg font-bold text-[20px] tracking-wider shadow-md hover:brightness-110 active:scale-95 transition-all text-center whitespace-nowrap"
+            >
+              Reset Balls
+            </button>
+            <div className="text-white text-center font-roboto text-[11px] sm:text-[14px] leading-tight drop-shadow-md select-none whitespace-nowrap">
+              Press button to<br/>draw ball
+            </div>
           </div>
 
           <button
@@ -35,6 +43,7 @@ const Controls: React.FC<ControlsProps> = ({
                 flex items-center justify-center
                 relative
                 p-1 sm:p-[5px]
+                mt-8
             `}
           >
             <div className="w-full h-full rounded-full bg-[#ff0000] shadow-[inset_0_4px_6px_rgba(0,0,0,0.4),inset_0_-2px_4px_rgba(255,255,255,0.1)] flex items-center justify-center relative">

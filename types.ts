@@ -14,26 +14,26 @@ export interface BallColor {
 }
 
 const RANGE_COLORS: BallColor[] = [
-  // 1-10: White
-  { bg: 'bg-white', text: 'text-black', border: 'border-gray-300', hex: '#ffffff' },
-  // 11-20: Cyan
-  { bg: 'bg-cyan-300', text: 'text-black', border: 'border-cyan-500', hex: '#06FFFF' },
-  // 21-30: Pink (Magenta)
-  { bg: 'bg-fuchsia-500', text: 'text-white', border: 'border-fuchsia-700', hex: '#F300F3' },
-  // 31-40: Green (Lime)
-  { bg: 'bg-lime-500', text: 'text-black', border: 'border-lime-700', hex: '#00F200' },
-  // 41-50: Yellow
-  { bg: 'bg-yellow-300', text: 'text-black', border: 'border-yellow-500', hex: '#FFFF0D' },
-  // 51-60: Blue
-  { bg: 'bg-blue-600', text: 'text-white', border: 'border-blue-800', hex: '#0000E5' },
-  // 61-70: Red
-  { bg: 'bg-red-600', text: 'text-white', border: 'border-red-800', hex: '#F00000' },
-  // 71-80: Orange
-  { bg: 'bg-orange-500', text: 'text-white', border: 'border-orange-700', hex: '#E69200' },
-  // 81-90: Gray
-  { bg: 'bg-gray-500', text: 'text-white', border: 'border-gray-700', hex: '#6b7280' },
-  // 91-100: Black
-  { bg: 'bg-black', text: 'text-white', border: 'border-gray-800', hex: '#000000' },
+  // 1-10: White -> Pure White
+  { bg: 'bg-white', text: 'text-black', border: 'border-white', hex: '#ffffff' },
+  // 11-20: Cyan -> Neon Cyan
+  { bg: 'bg-cyan-400', text: 'text-black', border: 'border-cyan-500', hex: '#00FFFF' },
+  // 21-30: Pink -> Neon Magenta
+  { bg: 'bg-fuchsia-500', text: 'text-white', border: 'border-fuchsia-600', hex: '#FF00FF' },
+  // 31-40: Green -> Neon Lime
+  { bg: 'bg-lime-500', text: 'text-black', border: 'border-lime-600', hex: '#00FF00' },
+  // 41-50: Yellow -> Neon Yellow
+  { bg: 'bg-yellow-400', text: 'text-black', border: 'border-yellow-500', hex: '#FFFF00' },
+  // 51-60: Blue -> Neon Blue
+  { bg: 'bg-blue-500', text: 'text-white', border: 'border-blue-600', hex: '#0000FF' },
+  // 61-70: Red -> Neon Red
+  { bg: 'bg-red-500', text: 'text-white', border: 'border-red-600', hex: '#FF0000' },
+  // 71-80: Orange -> Neon Orange
+  { bg: 'bg-orange-500', text: 'text-white', border: 'border-orange-600', hex: '#FF8C00' },
+  // 81-90: Gray -> Bright Silver
+  { bg: 'bg-gray-300', text: 'text-black', border: 'border-gray-400', hex: '#E0E0E0' },
+  // 91-100: Black -> Dark Charcoal
+  { bg: 'bg-gray-800', text: 'text-white', border: 'border-gray-900', hex: '#333333' },
 ];
 
 export const BALL_COLORS = RANGE_COLORS;

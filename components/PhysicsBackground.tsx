@@ -24,10 +24,10 @@ const PhysicsBackground: React.FC<PhysicsBackgroundProps> = ({ totalBalls, trigg
   useEffect(() => {
     if (ballsRef.current.length > 0) {
       ballsRef.current.forEach(ball => {
-        // เพิ่มแรงขึ้นอย่างมากเพื่อให้กระโดดได้สูงถึงประมาณ 60% ของพื้นที่
-        const forceMagnitude = (0.035 + Math.random() * 0.015) * ball.mass;
+        // ปรับแรงเพิ่มขึ้น 50%
+        const forceMagnitude = (0.27 + Math.random() * 0.09) * ball.mass;
         // ปรับมุมให้เน้นพุ่งขึ้นด้านบน (-Math.PI / 2) โดยสุ่มเฉียงซ้ายขวาเล็กน้อย
-        const angle = -Math.PI / 2 + (Math.random() - 0.5) * 1.2; 
+        const angle = -Math.PI / 2 + (Math.random() - 0.5) * 1.5; 
         
         Matter.Body.applyForce(ball, ball.position, { 
           x: Math.cos(angle) * forceMagnitude, 
@@ -94,14 +94,14 @@ const PhysicsBackground: React.FC<PhysicsBackgroundProps> = ({ totalBalls, trigg
     
     const groundOptions = { 
       isStatic: true, 
-      restitution: 1.2, 
+      restitution: 1.1, // ปรับเพิ่มความเด้ง
       friction: 0,      
       render: { visible: false } 
     };
 
     const wallOptions = { 
       isStatic: true, 
-      restitution: 0.8, 
+      restitution: 1.08, // ปรับเพิ่มความเด้ง
       friction: 0.05, 
       render: { visible: false } 
     };
@@ -134,9 +134,9 @@ const PhysicsBackground: React.FC<PhysicsBackgroundProps> = ({ totalBalls, trigg
       const startY = -50 - (Math.floor(index / 10) * 40) - (Math.random() * 20);
 
       const ball = Bodies.circle(startX, startY, physicsRadius, {
-        restitution: 0.9, 
+        restitution: 1.08, // ปรับเพิ่มความเด้ง
         friction: 0.0001,      
-        frictionAir: 0.005,   
+        frictionAir: 0.002,   
         slop: 0, 
         collisionFilter: { group: -1 },
         render: { fillStyle: color.hex }
@@ -166,23 +166,23 @@ const PhysicsBackground: React.FC<PhysicsBackgroundProps> = ({ totalBalls, trigg
         if (isHighBouncer) {
           // ลูกที่เด้งสูง: ดีดขึ้นแรงๆ เฉพาะเมื่ออยู่บนพื้นและกำลังตกหรือหยุดนิ่ง (ป้องกันการเด้งกลางอากาศ)
           if (isOnFloor && ball.velocity.y >= -0.5) {
-            const forceX = (Math.random() - 0.5) * 0.02 * ball.mass;
-            const forceY = (-0.05 - Math.random() * 0.04) * ball.mass;
+            const forceX = (Math.random() - 0.5) * 0.045 * ball.mass;
+            const forceY = (-0.135 - Math.random() * 0.045) * ball.mass;
             Matter.Body.applyForce(ball, ball.position, { x: forceX, y: forceY });
           }
         } else {
           // ลูกที่เด้งเบาๆ: เด้งถี่ๆ 15% และขยับซ้ายขวา เฉพาะเมื่ออยู่บนพื้น (ป้องกันการเด้งกลางอากาศ)
           if (isOnFloor && ball.velocity.y >= -0.5) {
             // เพิ่มแรงแนวนอนให้ขยับไปมาซ้ายขวา
-            const rollX = (Math.random() - 0.5) * 0.025 * ball.mass;
+            const rollX = (Math.random() - 0.5) * 0.045 * ball.mass;
             // แรงเด้งถี่ๆ ที่แรงขึ้นแต่ยังคุมความสูง (ประมาณ 15% ของลูกเด้งสูง)
-            const bounceY = (-0.015 - Math.random() * 0.005) * ball.mass;
+            const bounceY = (-0.045 - Math.random() * 0.018) * ball.mass;
             Matter.Body.applyForce(ball, ball.position, { x: rollX, y: bounceY });
           }
         }
 
-        if (speed > 25) {
-          const ratio = 25 / speed;
+        if (speed > 36) { // ปรับเพิ่มขีดจำกัดความเร็ว
+          const ratio = 36 / speed;
           Matter.Body.setVelocity(ball, {
             x: ball.velocity.x * ratio,
             y: ball.velocity.y * ratio
